@@ -6,14 +6,14 @@ spark = SparkSession.builder.appName("SensorStream").getOrCreate()
 sensor_df = spark \
     .readStream \
     .format("kafka") \
-    .option("kafka.bootstrap.servers", "url_kafka") \
-    .option("subscribe", "singgih-data-raw") \
+    .option("kafka.bootstrap.servers", "pkc-4r087.us-west2.gcp.confluent.cloud:9092") \
+    .option("subscribe", "fairuz-data-raw") \
     .option("startingOffsets", "earliest") \
     .option("kafka.security.protocol","SASL_SSL") \
     .option("kafka.sasl.mechanism", "PLAIN") \
-    .option("kafka.sasl.username","username_kafka") \
-    .option("kafka.sasl.password", "password_kafka") \
-    .option("kafka.sasl.jaas.config", """org.apache.kafka.common.security.plain.PlainLoginModule required username="username_kafka" password="password_kafka";""") \
+    .option("kafka.sasl.username","CHNRE5BDOQBYERGB") \
+    .option("kafka.sasl.password", "aaiaIQWBHrDz8dGz+xjBud7Ujqmd/5Zq1af6PCS5MH0rrXgfj+tAFgsvpEkHe0bv") \
+    .option("kafka.sasl.jaas.config", """org.apache.kafka.common.security.plain.PlainLoginModule required username="CHNRE5BDOQBYERGB" password="aaiaIQWBHrDz8dGz+xjBud7Ujqmd/5Zq1af6PCS5MH0rrXgfj+tAFgsvpEkHe0bv";""") \
     .load()
 
 raw_df = sensor_df.selectExpr("SPLIT(CAST(value AS STRING), ',' ) arr")
@@ -38,13 +38,13 @@ query = clean_df.selectExpr("CAST(measurement_id AS STRING) AS key", "to_json(st
     .format("kafka") \
     .outputMode("append") \
     .option("checkpointLocation", "checkpoint") \
-    .option("kafka.bootstrap.servers", "url_kafka") \
-    .option("topic", "singgih-data-clean") \
+    .option("kafka.bootstrap.servers", "pkc-4r087.us-west2.gcp.confluent.cloud:9092") \
+    .option("topic", "fairuz-data-clean") \
     .option("kafka.security.protocol","SASL_SSL") \
     .option("kafka.sasl.mechanism", "PLAIN") \
-    .option("kafka.sasl.username","username_kafka") \
-    .option("kafka.sasl.password", "password_kafka") \
-    .option("kafka.sasl.jaas.config", """org.apache.kafka.common.security.plain.PlainLoginModule required username="username_kafka" password="password_kafka";""") \
+    .option("kafka.sasl.username","CHNRE5BDOQBYERGB") \
+    .option("kafka.sasl.password", "aaiaIQWBHrDz8dGz+xjBud7Ujqmd/5Zq1af6PCS5MH0rrXgfj+tAFgsvpEkHe0bv") \
+    .option("kafka.sasl.jaas.config", """org.apache.kafka.common.security.plain.PlainLoginModule required username="CHNRE5BDOQBYERGB" password="aaiaIQWBHrDz8dGz+xjBud7Ujqmd/5Zq1af6PCS5MH0rrXgfj+tAFgsvpEkHe0bv";""") \
     .start()
 
 query.awaitTermination()
